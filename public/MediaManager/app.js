@@ -4353,7 +4353,7 @@ __webpack_require__.r(__webpack_exports__);
 
             if (!file.dataURL) {
               var img = el.querySelector('img');
-              img.src = './assets/vendor/MediaManager/noPreview.jpg';
+              img.src = './MediaManager/noPreview.jpg';
               img.style.height = '120px';
               img.style.width = '120px';
               el.dataset.name = file.name;
@@ -50760,9 +50760,7 @@ var render = function() {
           attrs: { src: _vm.src, alt: _vm.file.name, loading: "lazy" }
         })
       : _c("img", {
-          attrs: {
-            src: "/assets/vendor/MediaManager/patterns/gif/5b98026bab87a.gif"
-          }
+          attrs: { src: "/MediaManager/patterns/gif/5b98026bab87a.gif" }
         })
   ])
 }

@@ -98,7 +98,7 @@ export default {
                             // get around https://www.dropzonejs.com/#config-maxThumbnailFilesize
                             if (!file.dataURL) {
                                 let img = el.querySelector('img')
-                                img.src = './assets/vendor/MediaManager/noPreview.jpg'
+                                img.src = './MediaManager/noPreview.jpg'
                                 img.style.height = '120px'
                                 img.style.width = '120px'
 

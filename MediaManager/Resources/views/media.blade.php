@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ trans('MediaManager::messages.title') }}</title>
-
-    {{-- Styles --}}
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
 </head>
 <body>
     <section id="app" v-cloak>
@@ -17,19 +14,14 @@
             <my-notification></my-notification>
         </div>
 
-        <div class="container is-fluid">
-            <div class="columns">
-                {{-- media manager --}}
-                <div class="column">
-                    @include('MediaManager::_manager')
-                </div>
-            </div>
+        <div class="media-manager-container">
+            @include('MediaManager::_manager')
         </div>
     </section>
 
     {{-- footer --}}
     @stack('styles')
     @stack('scripts')
-    <script src="{{ asset("js/app.js") }}"></script>
+    {{-- <script src="{{ asset("js/app.js") }}"></script> --}}
 </body>
 </html>

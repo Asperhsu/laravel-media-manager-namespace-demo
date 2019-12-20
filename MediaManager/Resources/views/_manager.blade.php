@@ -472,7 +472,7 @@
                 <div>
                     {{-- loading data from server --}}
                     <div id="loading_files" v-show="loading_files">
-                        <div id="loading_files_anim" data-json="{{ asset('assets/vendor/MediaManager/lottie/world.json') }}"></div>
+                        <div id="loading_files_anim" data-json="{{ asset($asset_path . '/lottie/world.json') }}"></div>
 
                         <transition name="mm-list" mode="out-in">
                             <h3 key="1" v-if="showProgress" class="mm-animated pulse">
@@ -485,7 +485,7 @@
 
                     {{-- ajax error --}}
                     <div id="ajax_error" v-show="ajax_error">
-                        <div id="ajax_error_anim" data-json="{{ asset('assets/vendor/MediaManager/lottie/avalanche.json') }}"></div>
+                        <div id="ajax_error_anim" data-json="{{ asset($asset_path . '/lottie/avalanche.json') }}"></div>
                         <h3>{{ trans('MediaManager::messages.ajax_error') }}</h3>
                     </div>
 
@@ -497,7 +497,7 @@
                         @swipeleft="goToPrevFolder()"
                         @hold="containerClick($event, 'no_files')"
                         @dbltap="containerClick($event, 'no_files')">
-                        <div id="no_files_anim" data-json="{{ asset('assets/vendor/MediaManager/lottie/zero.json') }}"></div>
+                        <div id="no_files_anim" data-json="{{ asset($asset_path . '/lottie/zero.json') }}"></div>
                         <h3>{{ trans('MediaManager::messages.no_files_in_folder') }}</h3>
                     </v-touch>
                 </div>
@@ -541,7 +541,7 @@
                     {{-- no search --}}
                     <section>
                         <div id="no_search" v-show="no_search">
-                            <div id="no_search_anim" data-json="{{ asset('assets/vendor/MediaManager/lottie/ice_cream.json') }}"></div>
+                            <div id="no_search_anim" data-json="{{ asset($asset_path . '/lottie/ice_cream.json') }}"></div>
                             <h3>@{{ trans('nothing_found') }}</h3>
                         </div>
                     </section>
@@ -1030,10 +1030,11 @@
 
 {{-- styles --}}
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/MediaManager/style.css') }}"/>
+    <link rel="stylesheet" href="{{ asset($asset_path . '/app.css') }}"/>
 @endpush
 
 {{-- scripts --}}
 @push('scripts')
     <script src="//cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
+    <script src="{{ asset($asset_path . '/app.js') }}"></script>
 @endpush

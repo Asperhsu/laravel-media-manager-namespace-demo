@@ -6,7 +6,7 @@
              :alt="file.name"
              loading="lazy">
         <img v-else
-             src="/assets/vendor/MediaManager/patterns/gif/5b98026bab87a.gif">
+             src="/MediaManager/patterns/gif/5b98026bab87a.gif">
     </div>
 </template>
 
