@@ -224,6 +224,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./Resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./Resources/sass/app.scss ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./Resources/vendor/js/components/globalSearch/button.vue":
 /*!****************************************************************!*\
   !*** ./Resources/vendor/js/components/globalSearch/button.vue ***!
@@ -5501,17 +5512,6 @@ window.downloadFile = function (a) {
 
   return -1 === a.indexOf("?") && (a += "?download"), window.open(a, "_self"), !0;
 }, window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf("chrome") > -1, window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf("safari") > -1;
-
-/***/ }),
-
-/***/ "./Resources/vendor/sass/manager.scss":
-/*!********************************************!*\
-  !*** ./Resources/vendor/sass/manager.scss ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -67930,14 +67930,14 @@ module.exports = function() {
 /***/ }),
 
 /***/ 0:
-/*!************************************************************************!*\
-  !*** multi ./Resources/js/app.js ./Resources/vendor/sass/manager.scss ***!
-  \************************************************************************/
+/*!*************************************************************!*\
+  !*** multi ./Resources/js/app.js ./Resources/sass/app.scss ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! /Users/asper/Code/asper/lmm/MediaManager/Resources/js/app.js */"./Resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/asper/Code/asper/lmm/MediaManager/Resources/vendor/sass/manager.scss */"./Resources/vendor/sass/manager.scss");
+module.exports = __webpack_require__(/*! /Users/asper/Code/asper/lmm/MediaManager/Resources/sass/app.scss */"./Resources/sass/app.scss");
 
 
 /***/ })
