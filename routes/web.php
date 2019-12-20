@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// MediaManager
+ctf0\MediaManager\MediaRoutes::routes();
