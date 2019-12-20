@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./node_modules/babel-loader/lib/index.js?!./resources/assets/vendor/MediaManager/js/webworkers/db.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./node_modules/babel-loader/lib/index.js?!./Resources/vendor/js/webworkers/db.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -98,10 +98,10 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./resources/assets/vendor/MediaManager/js/webworkers/db.js":
-/*!************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./resources/assets/vendor/MediaManager/js/webworkers/db.js ***!
-  \************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./Resources/vendor/js/webworkers/db.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./Resources/vendor/js/webworkers/db.js ***!
+  \****************************************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

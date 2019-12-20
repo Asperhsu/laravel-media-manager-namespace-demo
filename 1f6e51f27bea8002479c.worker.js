@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./node_modules/babel-loader/lib/index.js?!./resources/assets/vendor/MediaManager/js/webworkers/audio.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./node_modules/babel-loader/lib/index.js?!./Resources/vendor/js/webworkers/audio.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./resources/assets/vendor/MediaManager/js/webworkers/audio.js":
-/*!***************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./resources/assets/vendor/MediaManager/js/webworkers/audio.js ***!
-  \***************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./Resources/vendor/js/webworkers/audio.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./Resources/vendor/js/webworkers/audio.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1466,12 +1466,12 @@ const fileType = input => {
 	// `ftyp` box must contain a brand major identifier, which must consist of ISO 8859-1 printable characters.
 	// Here we check for 8859-1 printable characters (for simplicity, it's a mask which also catches one non-printable character).
 	if (
-		check([0x66, 0x74, 0x79, 0x70], {offset: 4}) && // `ftyp`
-		(buffer[8] & 0x60) !== 0x00 && (buffer[9] & 0x60) !== 0x00 && (buffer[10] & 0x60) !== 0x00 && (buffer[11] & 0x60) !== 0x00 // Brand major
+		checkString('ftyp', {offset: 4}) &&
+		(buffer[8] & 0x60) !== 0x00 // Brand major, first character ASCII?
 	) {
 		// They all can have MIME `video/mp4` except `application/mp4` special-case which is hard to detect.
 		// For some cases, we're specific, everything else falls to `video/mp4` with `mp4` extension.
-		const brandMajor = uint8ArrayUtf8ByteString(buffer, 8, 12);
+		const brandMajor = uint8ArrayUtf8ByteString(buffer, 8, 12).replace('\0', ' ').trim();
 		switch (brandMajor) {
 			case 'mif1':
 				return {ext: 'heic', mime: 'image/heif'};
@@ -1481,23 +1481,23 @@ const fileType = input => {
 				return {ext: 'heic', mime: 'image/heic'};
 			case 'hevc': case 'hevx':
 				return {ext: 'heic', mime: 'image/heic-sequence'};
-			case 'qt  ':
+			case 'qt':
 				return {ext: 'mov', mime: 'video/quicktime'};
-			case 'M4V ': case 'M4VH': case 'M4VP':
+			case 'M4V': case 'M4VH': case 'M4VP':
 				return {ext: 'm4v', mime: 'video/x-m4v'};
-			case 'M4P ':
+			case 'M4P':
 				return {ext: 'm4p', mime: 'video/mp4'};
-			case 'M4B ':
+			case 'M4B':
 				return {ext: 'm4b', mime: 'audio/mp4'};
-			case 'M4A ':
+			case 'M4A':
 				return {ext: 'm4a', mime: 'audio/x-m4a'};
-			case 'F4V ':
+			case 'F4V':
 				return {ext: 'f4v', mime: 'video/mp4'};
-			case 'F4P ':
+			case 'F4P':
 				return {ext: 'f4p', mime: 'video/mp4'};
-			case 'F4A ':
+			case 'F4A':
 				return {ext: 'f4a', mime: 'audio/mp4'};
-			case 'F4B ':
+			case 'F4B':
 				return {ext: 'f4b', mime: 'audio/mp4'};
 			default:
 				if (brandMajor.startsWith('3g')) {
@@ -4179,7 +4179,7 @@ class APEv2Parser extends BasicParser_1.BasicParser {
         if (footer.ID === preamble) {
             await tokenizer.ignore(APEv2Token_1.TagFooter.len);
             const tags = await tokenizer.readToken(APEv2Token_1.TagField(footer));
-            APEv2Parser.parseTags(metadata, footer, tags, 0, !options.skipCovers);
+            return APEv2Parser.parseTags(metadata, footer, tags, 0, !options.skipCovers);
         }
         else {
             debug(`APEv2 header not found at offset=${tokenizer.position}`);
@@ -4192,21 +4192,24 @@ class APEv2Parser extends BasicParser_1.BasicParser {
             }
         }
     }
+    /**
+     * Calculates the APEv1 / APEv2 first field offset
+     * @param reader
+     * @param offset
+     */
     static async findApeFooterOffset(reader, offset) {
-        if (offset >= APEv2Token_1.TagFooter.len) {
-            // Search for APE footer header at the end of the file
-            const apeBuf = Buffer.alloc(APEv2Token_1.TagFooter.len);
-            await reader.randomRead(apeBuf, 0, APEv2Token_1.TagFooter.len, offset - APEv2Token_1.TagFooter.len);
-            const tagFooter = APEv2Token_1.TagFooter.get(apeBuf, 0);
-            if (tagFooter.ID === 'APETAGEX') {
-                return offset - APEv2Token_1.TagFooter.len - tagFooter.size;
-            }
+        // Search for APE footer header at the end of the file
+        const apeBuf = Buffer.alloc(APEv2Token_1.TagFooter.len);
+        await reader.randomRead(apeBuf, 0, APEv2Token_1.TagFooter.len, offset - APEv2Token_1.TagFooter.len);
+        const tagFooter = APEv2Token_1.TagFooter.get(apeBuf, 0);
+        if (tagFooter.ID === 'APETAGEX') {
+            return { footer: tagFooter, offset: offset - tagFooter.size };
         }
     }
     static parseTagFooter(metadata, buffer, includeCovers) {
         const footer = APEv2Token_1.TagFooter.get(buffer, buffer.length - APEv2Token_1.TagFooter.len);
         assert.strictEqual(footer.ID, preamble, 'APEv2 Footer preamble');
-        this.parseTags(metadata, footer, buffer, buffer.length - footer.size, includeCovers);
+        this.parseTags(metadata, footer, buffer, 0, includeCovers);
     }
     static parseTags(metadata, footer, buffer, offset, includeCovers) {
         for (let i = 0; i < footer.fields; i++) {
@@ -4275,6 +4278,11 @@ class APEv2Parser extends BasicParser_1.BasicParser {
         const header = await (lenExp > 0 ? this.parseDescriptorExpansion(lenExp) : this.parseHeader());
         await this.tokenizer.ignore(header.forwardBytes);
         return APEv2Parser.parseTagHeader(this.metadata, this.tokenizer, this.options);
+    }
+    async parseTags(footer) {
+        const tagBuf = Buffer.alloc(footer.size - APEv2Token_1.TagFooter.len);
+        await this.tokenizer.readBuffer(tagBuf);
+        APEv2Parser.parseTags(this.metadata, footer, tagBuf, 0, !this.options.skipCovers);
     }
     async parseDescriptorExpansion(lenExp) {
         await this.tokenizer.ignore(lenExp);
@@ -6307,7 +6315,7 @@ async function scanAppendingHeaders(randomReader, options = {}) {
         const lyricsLen = await Lyrics3_1.getLyricsHeaderLength(randomReader);
         apeOffset -= lyricsLen;
     }
-    options.apeOffset = await APEv2Parser_1.APEv2Parser.findApeFooterOffset(randomReader, apeOffset);
+    options.apeHeader = await APEv2Parser_1.APEv2Parser.findApeFooterOffset(randomReader, apeOffset);
 }
 exports.scanAppendingHeaders = scanAppendingHeaders;
 //# sourceMappingURL=core.js.map
@@ -6734,8 +6742,23 @@ class EbmlParser extends BasicParser_1.BasicParser {
                 case 0x4286:
                     ebml.version = await this.tokenizer.readNumber(Token.UINT8);
                     break;
+                case 0x42f7:
+                    ebml.readVersion = await this.readUint(e);
+                    break;
+                case 0x42f2:
+                    ebml.maxIDWidth = await this.readUint(e);
+                    break;
+                case 0x42f3:
+                    ebml.maxSizeWidth = await this.readUint(e);
+                    break;
                 case 0x4282:
-                    ebml.docType = await this.tokenizer.readToken(new Token.StringType(e.len, 'utf-8'));
+                    ebml.docType = await this.readString(e);
+                    break;
+                case 0x4287:
+                    ebml.docTypeVersion = await this.readUint(e);
+                    break;
+                case 0x4285:
+                    ebml.docTypeReadVersion = await this.readUint(e);
                     break;
                 case 0xec: // void
                     this.padding += e.len;
@@ -7533,9 +7556,11 @@ class ID3v1Parser extends BasicParser_1.BasicParser {
             debug('Skip checking for ID3v1 because the file-size is unknown');
             return;
         }
-        if (this.options.apeOffset) {
-            this.tokenizer.ignore(this.options.apeOffset - this.tokenizer.position);
-            await APEv2Parser_1.APEv2Parser.parseTagHeader(this.metadata, this.tokenizer, this.options);
+        if (this.options.apeHeader) {
+            this.tokenizer.ignore(this.options.apeHeader.offset - this.tokenizer.position);
+            const apeParser = new APEv2Parser_1.APEv2Parser();
+            apeParser.init(this.metadata, this.tokenizer, this.options);
+            await apeParser.parseTags(this.options.apeHeader.footer);
         }
         const offset = this.tokenizer.fileSize - Iid3v1Token.len;
         if (this.tokenizer.position > offset) {

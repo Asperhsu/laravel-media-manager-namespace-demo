@@ -29,12 +29,15 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "ctf0/media-manager"
+            ]
         }
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "MediaManager\\": "MediaManager/"
         },
         "classmap": [
             "database/seeds",
