@@ -1,4 +1,4 @@
-window.Vue = require('vue');
+window.Vue = window.Vue || require('vue');
 
 require('../vendor/js/manager')
 

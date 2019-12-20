@@ -1,71 +1,53 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# 打包 ctf0/media-manager
+此套件複雜度高，以原本方式使用不容易修改、增加前端JS打包時間與大小。
+拆開到另外的Namespace(或Package)使用上比較方便
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## 建立 Namespace
+### 完成安裝
+- `composer require ctf0/media-manager`
+- `php artisan vendor:publish --provider="ctf0\MediaManager\MediaManagerServiceProvider"`
+- `php artisan lmm:setup`
 
-## About Laravel
+** dependencies 先不安裝
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### composer.json
+- 增加 dont-discover，因為要改寫 ctf0/media-manager service provider
+- 增加 autoload psr-4
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 移動套件的publish
+- config/mediaManager.php => MediaManager/Config/config.php
+- database/MediaManager.sqlite => MediaManager/Database/MediaManager.sqlite
+- database/migrations => MediaManager/Database/Migrations
+- resources/assets/vendor/MediaManager => MediaManager/Resources/vendor
+- resources/lang/vendor/MediaManager => MediaManager/Resources/lang
+- resources/views/vendor/MediaManager => MediaManager/Resources/views
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+** config/mediaManager.php `allowed_folderNames_chars` 定義的正規表示式有誤，新增資料夾時會炸，請在 - 前加入 \ 成為 `'_\-\s'`
 
-## Learning Laravel
+### 增加 MediaManager/Providers
+- `MediaManagerServiceProvider`: 註冊 config, translation, views. 請加入到 app.conf `providers`
+- `PackageServiceProvider`: 將原本的 packagePublish 取消執行
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+** `viewComp()` 內有定義前端元件使用的路徑與變數，如需要更改路徑請改寫此方法。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost you and your team's skills by digging into our comprehensive video library.
+### dependencies
+請切換到 MediaMedia 底下
 
-## Laravel Sponsors
+#### package.json
+- `npm init -y` 建立空的 package.json
+- 安裝 ctf0/media-manager 文件的 dependencies
+- 安裝 laravel-mix 等套件： `npm install laravel-mix cross-env sass sass-loader resolve-url-loader`
+- 加上 scripts
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### webpack.mix.js
+- `setPublicPath` 設定 base path
+- 修改 js, sass copyDirectory路徑
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 轉到已存在的專案
+- 複製 MediaManager 到 專案根目錄
+- 修改 composer.json (dont-discover, autoload)
+- .gitignore 加上 /**/node_modules
+- config/app.php 加上 `MediaManager\Providers\MediaManagerServiceProvider::class` (需在 RouteServiceProvider 前)
+- 修改 MediaManager/webpack.mix.js 輸出 js, css (會與原本的衝突)
+- 修改 views/media, _manager 的 asset url
