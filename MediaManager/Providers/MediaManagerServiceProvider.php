@@ -14,7 +14,7 @@ class MediaManagerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->root = base_path('MediaManager');
+        $this->root = realpath(__DIR__ . '/../');
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();

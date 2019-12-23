@@ -12,11 +12,11 @@
         'previewFilesBeforeUpload' => config('mediaManager.preview_files_before_upload')
     ]) }}"
     :routes="{{ json_encode([
-        'files' => route('media.get_files'),
-        'lock' => route('media.lock_file'),
-        'visibility' => route('media.change_vis'),
-        'upload' => route('media.upload'),
-        'locked_list' => route('media.locked_list')
+        'files' => route($route_prefix . 'get_files'),
+        'lock' => route($route_prefix . 'lock_file'),
+        'visibility' => route($route_prefix . 'change_vis'),
+        'upload' => route($route_prefix . 'upload'),
+        'locked_list' => route($route_prefix . 'locked_list')
     ]) }}"
     :translations="{{ json_encode([
         'added' => trans('MediaManager::messages.add.added'),
@@ -319,7 +319,7 @@
                                 <div class="field has-addons">
                                     <p class="control" v-if="!restrictModeIsOn">
                                         <global-search-btn
-                                            route="{{ route('media.global_search') }}"
+                                            route="{{ route($route_prefix . 'global_search') }}"
                                             :is-loading="isLoading"
                                             :trans="trans"
                                             :show-notif="showNotif">
@@ -472,7 +472,7 @@
                 <div>
                     {{-- loading data from server --}}
                     <div id="loading_files" v-show="loading_files">
-                        <div id="loading_files_anim" data-json="{{ asset($asset_path . '/lottie/world.json') }}"></div>
+                        <div id="loading_files_anim" data-json="{{ isset($lottie['loading']) ? asset($lottie['loading']) : '' }}"></div>
 
                         <transition name="mm-list" mode="out-in">
                             <h3 key="1" v-if="showProgress" class="mm-animated pulse">
@@ -485,7 +485,7 @@
 
                     {{-- ajax error --}}
                     <div id="ajax_error" v-show="ajax_error">
-                        <div id="ajax_error_anim" data-json="{{ asset($asset_path . '/lottie/avalanche.json') }}"></div>
+                        <div id="ajax_error_anim" data-json="{{ isset($lottie['ajax_error']) ? asset($lottie['ajax_error']) : '' }}"></div>
                         <h3>{{ trans('MediaManager::messages.ajax_error') }}</h3>
                     </div>
 
@@ -497,7 +497,7 @@
                         @swipeleft="goToPrevFolder()"
                         @hold="containerClick($event, 'no_files')"
                         @dbltap="containerClick($event, 'no_files')">
-                        <div id="no_files_anim" data-json="{{ asset($asset_path . '/lottie/zero.json') }}"></div>
+                        <div id="no_files_anim" data-json="{{ isset($lottie['no_files']) ? asset($lottie['no_files']) : '' }}"></div>
                         <h3>{{ trans('MediaManager::messages.no_files_in_folder') }}</h3>
                     </v-touch>
                 </div>
@@ -541,7 +541,7 @@
                     {{-- no search --}}
                     <section>
                         <div id="no_search" v-show="no_search">
-                            <div id="no_search_anim" data-json="{{ asset($asset_path . '/lottie/ice_cream.json') }}"></div>
+                            <div id="no_search_anim" data-json="{{ isset($lottie['no_search']) ? asset($lottie['no_search']) : '' }}"></div>
                             <h3>@{{ trans('nothing_found') }}</h3>
                         </div>
                     </section>
@@ -806,7 +806,7 @@
                                                 <tr>
                                                     <td class="t-key">{{ trans('MediaManager::messages.download.folder') }}:</td>
                                                     <td class="t-val">
-                                                        <form action="{{ route('media.folder_download') }}"method="post" @submit.prevent="ZipDownload($event)">
+                                                        <form action="{{ route($route_prefix . 'folder_download') }}"method="post" @submit.prevent="ZipDownload($event)">
                                                             {{ csrf_field() }}
                                                             <input type="hidden" name="folders" :value="files.path">
                                                             <input type="hidden" name="name" :value="selectedFile.name">
@@ -861,7 +861,7 @@
                                                     </td>
                                                     {{-- zip --}}
                                                     <td class="t-val">
-                                                        <form action="{{ route('media.files_download') }}"
+                                                        <form action="{{ route($route_prefix . 'files_download') }}"
                                                             method="post"
                                                             @submit.prevent="ZipDownload($event)"
                                                             v-show="isBulkSelecting()">

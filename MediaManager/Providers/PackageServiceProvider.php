@@ -16,38 +16,43 @@ class PackageServiceProvider extends ctf0ServiceProvider
         $this->command();
     }
 
-    /** override */
     protected function viewComp()
     {
-        $data = [];
+        parent::viewComp();
 
-        // base url
-        $config = $this->app['config']->get('mediaManager');
-        $url    = $this->app['filesystem']
-                    ->disk($config['storage_disk'])
-                    ->url('/');
-
-        $data['base_url'] = preg_replace('/\/+$/', '/', $url);
+        $data['patterns'] = $this->getPatterns();
         $data['asset_path'] = 'MediaManager';
-
-        // upload panel bg patterns
-        $pattern_path = public_path('MediaManager/patterns');
-
-        if ($this->file->exists($pattern_path)) {
-            $patterns = collect(
-                $this->file->allFiles($pattern_path)
-            )->map(function ($item) {
-                $name = str_replace('\\', '/', $item->getPathName());
-
-                return preg_replace('/.*\/patterns/', '/MediaManager/patterns', $name);
-            });
-
-            $data['patterns'] = json_encode($patterns);
-        }
+        $data['route_prefix'] = 'media.';
+        $data['lottie'] = [
+            'loading' => $data['asset_path'] . '/lottie/world.json',
+            'ajax_error' => $data['asset_path'] . '/lottie/avalanche.json',
+            'no_files' => $data['asset_path'] . '/lottie/zero.json',
+            'no_search' => $data['asset_path'] . '/lottie/ice_cream.json',
+        ];
 
         // share
         view()->composer('MediaManager::_manager', function ($view) use ($data) {
             $view->with($data);
         });
+    }
+
+    protected function getPatterns()
+    {
+        $resourcePath = 'MediaManager/patterns';
+        $pattern_path = public_path($resourcePath);
+
+        if (!$this->file->exists($pattern_path)) {
+            return json_encode([]);
+        }
+
+        $patterns = collect(
+            $this->file->allFiles($pattern_path)
+        )->map(function ($item) use ($resourcePath) {
+            $name = str_replace('\\', '/', $item->getPathName());
+
+            return preg_replace('/.*\/patterns/', '/' . $resourcePath, $name);
+        });
+
+        return json_encode($patterns);
     }
 }

@@ -21,7 +21,7 @@
         class="modal mm-animated fadeIn is-active __modal-editor">
         <v-touch class="modal-background link" @dbltap="toggleModal()"></v-touch>
         <div class="mm-animated fadeInDown __modal-content-wrapper">
-            <image-editor route="{{ route('media.uploadCropped') }}"
+            <image-editor route="{{ route($route_prefix . 'uploadCropped') }}"
                 :no-scroll="noScroll"
                 :file="selectedFile"
                 :translations="{{ json_encode([
@@ -58,7 +58,7 @@
                 <button type="button" class="delete" @click.stop="toggleModal()"></button>
             </header>
 
-            <form action="{{ route('media.uploadLink') }}" @submit.prevent="saveLinkForm($event)">
+            <form action="{{ route($route_prefix . 'uploadLink') }}" @submit.prevent="saveLinkForm($event)">
                 <section class="modal-card-body">
                     <input class="input" type="text"
                         v-model="urlToUpload"
@@ -92,7 +92,7 @@
                 <button type="button" class="delete" @click.stop="toggleModal()"></button>
             </header>
 
-            <form action="{{ route('media.new_folder') }}" @submit.prevent="NewFolderForm($event)">
+            <form action="{{ route($route_prefix . 'new_folder') }}" @submit.prevent="NewFolderForm($event)">
                 <section class="modal-card-body">
                     <input class="input" type="text"
                         v-model="newFolderName"
@@ -126,7 +126,7 @@
                 <button type="button" class="delete" @click.stop="toggleModal()"></button>
             </header>
 
-            <form action="{{ route('media.rename_file') }}" @submit.prevent="RenameFileForm($event)">
+            <form action="{{ route($route_prefix . 'rename_file') }}" @submit.prevent="RenameFileForm($event)">
                 <section class="modal-card-body">
                     <h3 class="title">{{ trans('MediaManager::messages.new.file_folder') }}</h3>
                     <input class="input" type="text"
@@ -155,7 +155,7 @@
         :class="{'is-active': isActiveModal('move_file_modal')}">
         <div class="modal-background link" @click.stop="toggleModal()"></div>
         <form class="modal-card mm-animated fadeInDown"
-            action="{{ route('media.move_file') }}"
+            action="{{ route($route_prefix . 'move_file') }}"
             @submit.prevent="MoveFileForm($event)">
             <header class="modal-card-head is-warning">
                 <p class="modal-card-title">
@@ -241,7 +241,7 @@
                 <button type="button" class="delete" @click.stop="toggleModal()"></button>
             </header>
 
-            <form action="{{ route('media.delete_file') }}"
+            <form action="{{ route($route_prefix . 'delete_file') }}"
                 @submit.prevent="DeleteFileForm($event)">
                 <section class="modal-card-body">
                     @include('MediaManager::partials.modal.del-files-info')
