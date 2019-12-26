@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.no-scroll {
+  overflow: hidden;
+}
+
 .media-manager-container {
   /*! bulma.io v0.8.0 | MIT License | github.com/jgthms/bulma */
   /*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
@@ -12457,6 +12461,11 @@ fieldset[disabled] .media-manager-container .select select:hover {
 .media-manager-container .footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
+}
+
+.media-manager-container .modal {
+  z-index: 1050;
+  position: fixed !important;
 }
 
 .media-manager-container [v-cloak] {
